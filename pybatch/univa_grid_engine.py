@@ -1,7 +1,10 @@
 import subprocess as sub
 from .utils import * 
 from .parse import *
+from .io import create_job_folder
 import numpy as np
+from datetime import timedelta
+from .parameters import create_params_array_grid
 
 ARRAY_SUBMISSION_TEMPLATE = """
 #!/bin/bash
@@ -12,7 +15,7 @@ mkdir -p {savepath}
 #$ -o {logname}.$JOB_ID.$TASK_ID
 
 #$ -j y
-#$ -l h_rt=24:00:00,h_data=4G
+#$ -l h_rt={jobtime},h_data={memory_gb}G
 #$ -pe shared {n_cpu_per_job}
 
 #$ -t 1-{n_subjobs}:1
@@ -46,12 +49,25 @@ def has_queue():
             return False
     return True
 
+def create_and_submit_parameter_grid_array(pyfile, params_dict, savepath=None, **kwargs):
+    if savepath is not None:
+        savepath = Path(savepath)
+    else:
+        savepath = create_job_folder()
+    params, names = create_params_array_grid(params_dict,savepath=savepath)
+    submission_script_path = create_job_array_script(savepath, pyfile, len(params), **kwargs)
+    submit_job(submission_script_path)
+
+
+# TODO: add a queue option
 def create_job_array_script(savepath, 
                             pyfile,
                             n_subjobs,
+                            jobtime_hrs=10,
                             n_cpu_per_job=3,
+                            memory_gb=4,
                             modules=['anaconda3'],
-                            conda_env='max_glmhmm',
+                            conda_env='ssm',
                             pyfile_args=None,
                             pyfile_kwargs=None): #pyfile is the absolute path of the python file to be run
     savepath = Path(savepath)
@@ -64,10 +80,13 @@ def create_job_array_script(savepath,
     
     pyfile_kwargs = dict(params_file=savepath / 'params.npy',
                          output_savepath=output_savepath,)
-                         
-    
+    jobtime = timedelta(hours=jobtime_hrs)                      
+    jobtime = format_timedelta(jobtime)
+    # Note to self: time format follows 24:00:00 
     submission_text = ARRAY_SUBMISSION_TEMPLATE.format(savepath=savepath,
                                                        logname=logname,
+                                                       jobtime=jobtime,
+                                                       memory_gb=memory_gb,
                                                        n_subjobs=n_subjobs,
                                                        pyfile=pyfile,
                                                        n_cpu_per_job=n_cpu_per_job,
@@ -81,8 +100,11 @@ def create_job_array_script(savepath,
     print(f'Submission script created at {filename}')
     return filename
 
-
-
-def submit_job():
+def submit_job(submission_script_path):
+    import subprocess
+    cmd = ['qsub', str(submission_script_path)]
+    print(f'Submitting job with command: {cmd}')
+    out = subprocess.check_output(cmd)
+    print(out)
     return
     
