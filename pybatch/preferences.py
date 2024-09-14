@@ -1,3 +1,5 @@
+import json 
+from pathlib import Path
 # Default preferences
 DEFAULT_DATA_DIR = Path().home() / 'pybatch' / 'jobs'
 PREFS_FILE = Path().home() / 'pybatch' / 'preferences.json'

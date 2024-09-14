@@ -1,5 +1,6 @@
 from datetime import datetime
 from .utils import * 
+from .preferences import *
 
 def create_job_folder():
     """Creates a job folder in the default data directory"""
