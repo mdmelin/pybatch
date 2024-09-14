@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pybatch"
+authors = [
+  {name="Max Melin", email="mmelin@ucla.edu"},
+]
+description = "A library for rapid execution of python scripts via batch submission systems"
+readme = "README.md"
+requires-python = ">=3.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+	     "numpy",
+       "argparse",
+]
+dynamic = ["version"]
+
+[project.scripts]
+pybatch = "pybatch.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."] 
+include = ["pybatch"]
+namespaces = false  # disable PEP 420 namespaces
+
+#[tool.setuptools.dynamic]
+#version = {attr = "pybatch.VERSION"}
