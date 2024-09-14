@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+from pathlib import Path
 from pybatch import parse_cli_args, load_subjob_params
 
 '''
@@ -27,6 +28,6 @@ if __name__ == '__main__':
     job_index = args[0] - 1 # job index is always the first positional arg. UGE uses 1-based indexing
     params = load_subjob_params(kwargs['params_file'], job_index)
     scores = fit_model(**params)
-    savename = kwargs['output_savepath'] / f'output_{job_index}.npy'
+    savename = Path(kwargs['output_savepath']) / f'output_{job_index}.npy'
     print(f'Saving scores to {savename}')
-    # np.save(savename, scores)
+    np.save(savename, scores)

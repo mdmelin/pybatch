@@ -57,6 +57,7 @@ def create_and_submit_parameter_grid_array(pyfile, params_dict, savepath=None, *
     params, names = create_params_array_grid(params_dict,savepath=savepath)
     submission_script_path = create_job_array_script(savepath, pyfile, len(params), **kwargs)
     submit_job(submission_script_path)
+    return params, savepath
 
 
 # TODO: add a queue option
@@ -73,6 +74,7 @@ def create_job_array_script(savepath,
     savepath = Path(savepath)
     logname = savepath / 'logs' / 'joblog'
     output_savepath = savepath / 'output'
+    output_savepath.mkdir()
     filename = savepath / 'submission_script.sh'
     # args should be a list of args that will be passed to the python file we wish to run
     if filename.exists():
