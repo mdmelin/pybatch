@@ -25,10 +25,11 @@ def create_params_array_grid(params_dict,
 
     param_names = list(params_dict.keys())
     param_vals = list(params_dict.values())
+    param_vals = [v if isinstance(v, list) else [v] for v in param_vals] # handle params with a single value
     params_matrix = np.array(list(itertools.product(*param_vals)), dtype=object)
     
     if not save:
-        return params_matrix 
+        return params_matrix, param_names
 
     if not savepath.exists():
         savepath.mkdir(parents=True)
@@ -45,6 +46,7 @@ def load_subjob_params(params_path, job_index):
     """
     Loads the parameters for a subjob
     """
+    params_path = Path(params_path)
     params = np.load(params_path, allow_pickle=True)
     param_names = np.load(params_path.parent / 'params_names.npy', allow_pickle=True)
     params_dict = dict(zip(param_names, params[job_index]))
