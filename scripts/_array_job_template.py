@@ -23,8 +23,7 @@ def fit_model(alpha, tol, solver):
     return scores
 
 if __name__ == '__main__':
-    args, kwargs = parse_cli_args()
-    job_index = args[0] - 1 # job index is always the first positional arg. UGE uses 1-based indexing
+    job_index, args, kwargs = parse_cli_args(get_job_index=True)
     params = load_subjob_params(kwargs['params_file'], job_index)
     scores = fit_model(**params)
     savename = kwargs['output_savepath'] / f'output_{job_index}.npy'

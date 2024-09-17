@@ -30,7 +30,7 @@ def list_to_cmd_args_string(l):
         return ''
     return ' '.join(str(x) for x in l)
 
-def parse_cli_args(cli_args=None):
+def parse_cli_args(cli_args=None, get_job_index=False):
     #input = shlex.split(sys.argv)
     if cli_args is None:
         cli_args = sys.argv[1:] # drop the python filepath
@@ -63,7 +63,11 @@ def parse_cli_args(cli_args=None):
             typed_kwargs[key] = infer_type_from_string(val[0])
         else:
             typed_kwargs[key] = [infer_type_from_string(v) for v in val]
-    return typed_args, typed_kwargs
+    if get_job_index:
+        job_index = typed_args[0] - 1 # job index is always the first positional arg. UGE uses 1-based indexing
+        return job_index, typed_args[1:], typed_kwargs
+    else:
+        return typed_args, typed_kwargs
 
 def infer_type_from_string(value):
     value = value.strip()  # Remove leading/trailing whitespace
