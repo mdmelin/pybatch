@@ -74,7 +74,7 @@ def create_job_array_script(savepath,
     savepath = Path(savepath)
     logname = savepath / 'logs' / 'joblog'
     output_savepath = savepath / 'output'
-    output_savepath.mkdir()
+    output_savepath.mkdir(exist_ok=True)
     filename = savepath / 'submission_script.sh'
     # args should be a list of args that will be passed to the python file we wish to run
     if filename.exists():
