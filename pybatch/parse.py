@@ -31,6 +31,11 @@ def list_to_cmd_args_string(l):
     return ' '.join(str(x) for x in l)
 
 def parse_cli_args(cli_args=None, get_job_index=False):
+    '''
+    Constructs an argparser for any arbitrary command line input, uses the argparser to get
+    positional args as a list and keyword args as a dict.
+    The function will also perform type inference on the arguments provided.
+    '''
     #input = shlex.split(sys.argv)
     if cli_args is None:
         cli_args = sys.argv[1:] # drop the python filepath

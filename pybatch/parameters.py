@@ -43,10 +43,10 @@ def create_params_array_grid(params_dict,
     #    np.save(f, numruns)
     return params_matrix, param_names
 
-def assemble_outputs(save_dir):
+def assemble_outputs(save_dir, file_prefix='output'):
     save_dir = Path(save_dir)
 
-    npy_files = (save_dir / 'output').glob('*.npy')
+    npy_files = (save_dir / 'output').glob(f'{file_prefix}*.npy')
     params = np.load(save_dir / 'params.npy', allow_pickle=True)
     n_expected = params.shape[0]
     out = np.empty((n_expected,), dtype=object)
@@ -57,7 +57,7 @@ def assemble_outputs(save_dir):
         out[i] = dat
         returned_inds.append(i)
     print(f'Expected {n_expected} outputs. Found {len(returned_inds)}.')
-    return out, returned_inds
+    return params, out, returned_inds
 
 def load_params(savepath):
     savepath = Path(savepath)

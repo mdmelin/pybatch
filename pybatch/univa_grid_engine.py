@@ -15,7 +15,7 @@ mkdir -p {savepath}
 #$ -o {logname}.$JOB_ID.$TASK_ID
 
 #$ -j y
-#$ -l h_rt={jobtime},h_data={memory_gb}G
+#$ -l h_rt={jobtime},h_vmem={memory_gb}G
 #$ -pe shared {n_cpu_per_job}
 
 #$ -t 1-{n_subjobs}:1
@@ -33,7 +33,7 @@ echo " " # the command goes in quotes
 
 
 echo "This is sub-job $SGE_TASK_ID"
-echo "{pyfile} "$SGE_TASK_ID" {pyfile_args} {pyfile_kwargs}"
+echo "python {pyfile} "$SGE_TASK_ID" {pyfile_args} {pyfile_kwargs}"
 
 python {pyfile} "$SGE_TASK_ID" {pyfile_args} {pyfile_kwargs} #run the python script with the proper index
 
