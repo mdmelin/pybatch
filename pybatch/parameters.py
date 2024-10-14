@@ -25,7 +25,7 @@ def create_params_array_grid(params_dict,
 
     param_names = list(params_dict.keys())
     param_vals = list(params_dict.values())
-    param_vals = [v if isinstance(v, list) else [v] for v in param_vals] # handle params with a single value
+    param_vals = [v if isinstance(v, (list, np.ndarray)) else [v] for v in param_vals] # handle params with a single value
     params_matrix = np.array(list(itertools.product(*param_vals)), dtype=object)
     print(f'Created parameter grid with {params_matrix.shape[0]} parameter sets')
     

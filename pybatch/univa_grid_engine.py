@@ -2,7 +2,6 @@ import subprocess as sub
 from .utils import * 
 from .parse import *
 from .io import create_job_folder
-import numpy as np
 from datetime import timedelta
 from .parameters import create_params_array_grid
 
@@ -71,6 +70,8 @@ def create_job_array_script(savepath,
                             conda_env='ssm',
                             pyfile_args=None,
                             pyfile_kwargs=None): #pyfile is the absolute path of the python file to be run
+    if not Path(pyfile).exists():
+        raise FileNotFoundError('The python file provided does not exist')
     savepath = Path(savepath)
     logname = savepath / 'logs' / 'joblog'
     output_savepath = savepath / 'output'
@@ -90,7 +91,7 @@ def create_job_array_script(savepath,
                                                        jobtime=jobtime,
                                                        memory_gb=memory_gb,
                                                        n_subjobs=n_subjobs,
-                                                       pyfile=pyfile,
+                                                       pyfile=str(pyfile),
                                                        n_cpu_per_job=n_cpu_per_job,
                                                        conda_env=conda_env,
                                                        modules=list_to_cmd_args_string(modules),
