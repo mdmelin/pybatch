@@ -59,14 +59,17 @@ def assemble_outputs(save_dir, file_prefix='output'):
     print(f'Expected {n_expected} outputs. Found {len(returned_inds)}.')
     return params, out, returned_inds
 
-def load_params(savepath):
+def load_params(savepath, split_keys=True):
     savepath = Path(savepath)
     params = np.load(savepath / 'params.npy', allow_pickle=True)
     param_names = np.load(savepath / 'params_names.npy', allow_pickle=True)
-    params_dict = dict()
-    for i, name in enumerate(param_names):
-        params_dict[name] = params[:,i]
-    return params_dict
+    if split_keys:
+        params_dict = dict()
+        for i, name in enumerate(param_names):
+            params_dict[name] = params[:,i]
+        return params_dict
+    else:
+        return params, param_names
 
 def load_subjob_params(params_path, job_index):
     """

@@ -5,6 +5,7 @@ from .io import create_job_folder
 from datetime import timedelta
 from .parameters import create_params_array_grid
 
+# TODO: move this to an engines.py file for different submission engines
 ARRAY_SUBMISSION_TEMPLATE = """
 #!/bin/bash
 mkdir -p {savepath}
@@ -81,8 +82,13 @@ def create_job_array_script(savepath,
     if filename.exists():
         raise FileExistsError("Submission script already exists")
     
-    pyfile_kwargs = dict(params_file=savepath / 'params.npy',
-                         output_savepath=output_savepath,)
+    if pyfile_kwargs is None:
+        pyfile_kwargs = dict(params_file=savepath / 'params.npy',
+                             output_savepath=output_savepath,)
+    else:
+        temp = dict(params_file=savepath / 'params.npy',
+                    output_savepath=output_savepath,)
+        pyfile_kwargs = {**pyfile_kwargs, **temp}
     jobtime = timedelta(hours=jobtime_hrs)                      
     jobtime = format_timedelta(jobtime)
     # Note to self: time format follows 24:00:00 
