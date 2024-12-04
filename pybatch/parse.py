@@ -25,10 +25,12 @@ def dict_to_cmd_args_string(d):
             args.append(str(value))
     return ' '.join(args)
 
-def list_to_cmd_args_string(l):
+def list_to_cmd_args_string(l, delimiter=None):
+    if delimiter is None:
+        delimiter = ' '
     if l is None:
         return ''
-    return ' '.join(str(x) for x in l)
+    return delimiter.join(str(x) for x in l)
 
 def parse_cli_args(cli_args=None, get_job_index=False):
     '''

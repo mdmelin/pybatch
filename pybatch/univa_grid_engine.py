@@ -15,7 +15,7 @@ mkdir -p {savepath}
 #$ -o {logname}.$JOB_ID.$TASK_ID
 
 #$ -j y
-#$ -l h_rt={jobtime},h_vmem={memory_gb}G
+#$ -l h_rt={jobtime},h_vmem={memory_gb}G,{queue_flags_string}
 #$ -pe shared {n_cpu_per_job}
 
 #$ -t 1-{n_subjobs}:1
@@ -68,6 +68,7 @@ def create_job_array_script(savepath,
                             n_cpu_per_job=3,
                             memory_gb=4,
                             modules=['anaconda3'],
+                            queue_flags=None,
                             conda_env='ssm',
                             pyfile_args=None,
                             pyfile_kwargs=None): #pyfile is the absolute path of the python file to be run
@@ -100,6 +101,7 @@ def create_job_array_script(savepath,
                                                        pyfile=str(pyfile),
                                                        n_cpu_per_job=n_cpu_per_job,
                                                        conda_env=conda_env,
+                                                       queue_flags_string=list_to_cmd_args_string(queue_flags, delimiter=','),
                                                        modules=list_to_cmd_args_string(modules),
                                                        pyfile_args=list_to_cmd_args_string(pyfile_args),
                                                        pyfile_kwargs=dict_to_cmd_args_string(pyfile_kwargs),)
